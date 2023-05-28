@@ -76,6 +76,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = self.get_object()
         user = request.user
         if request.method == 'POST':
+            """Валидировать SerializerMethodField на уровне
+            поля сериализатора нельзя, поскольку он read_only и
+            генерируется под каждый запрос.
+            https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
+            Мне кажется, чтобы перенести валидацию в сериализатор,
+            придется переписать логику. Можно ли оставить валидацию во вьюсете,
+            поскольку мы здесь вносим изменения в модель Recipes?
+            """
             if user in recipe.is_favorited.all():
                 return Response(
                     {'errors': 'The recipe is already in favorites'},
@@ -92,6 +100,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             }
             return Response(data=data, status=status.HTTP_201_CREATED)
         if request.method == 'DELETE':
+
             if user not in recipe.is_favorited.all():
                 return Response(
                     {'errors': 'No such recipe in the favorites'},
@@ -162,7 +171,7 @@ class ShoppingList(APIView):
         for recipe in recipes:
             ingredients = IngredientPerRecipe.objects.filter(
                 recipe=recipe)
-            recipe_list.append(str(recipe.name))
+            recipe_list.append(recipe.name)
             for ingredient in ingredients:
                 ingredient_name = ingredient.ingredient
                 ingredient_amount = ingredient.amount
@@ -170,11 +179,11 @@ class ShoppingList(APIView):
                     ingredient_list[ingredient_name] += ingredient_amount
                 else:
                     ingredient_list[ingredient_name] = ingredient_amount
-        final_list = "Shopping list for " + ", ".join(recipe_list) + "\n"
+        final_list = "Shopping list for ' + ',' '.join(recipe_list) + '\n"
         for ingredient, amount in ingredient_list.items():
             ingredient_unit = Ingredients.objects.get(
                 name=ingredient).measurement_unit
-            final_list += (f"{ingredient} ({ingredient_unit}) - {amount}\n")
+            final_list += (f'{ingredient} ({ingredient_unit}) - {amount}\n')
         content = final_list
         response = HttpResponse(content, content_type='text/plain')
         response['Content-Disposition'] = (

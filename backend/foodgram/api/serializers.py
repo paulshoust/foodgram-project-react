@@ -6,7 +6,7 @@ from rest_framework import serializers
 from recipe.models import IngredientPerRecipe, Ingredients, Recipes, Tag
 from users.serializers import UserSerializer
 
-from .validators import positive_value_validator
+from .validators import positive_value_validator, max_integer_field_validator
 
 User = get_user_model()
 
@@ -30,7 +30,8 @@ class IngredientPerRecipeSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source='ingredient.name', read_only=True)
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit')
-    amount = serializers.IntegerField(validators=[positive_value_validator])
+    amount = serializers.IntegerField(
+        validators=[positive_value_validator, max_integer_field_validator])
 
     class Meta:
         model = IngredientPerRecipe
@@ -49,7 +50,10 @@ class IngredientRecipeCreateSerializer(serializers.ModelSerializer):
     """Serializer to add Ingredient amount along with new recipe."""
 
     amount = serializers.IntegerField(
-        write_only=True, validators=[positive_value_validator])
+        write_only=True, validators=[positive_value_validator,
+                                     max_integer_field_validator
+                                     ]
+    )
     id = serializers.IntegerField(write_only=True)
 
     class Meta:
@@ -73,7 +77,8 @@ class RecipeUpdateSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
     name = serializers.CharField()
     text = serializers.CharField()
-    cooking_time = serializers.CharField(validators=[positive_value_validator])
+    cooking_time = serializers.IntegerField(
+        validators=[positive_value_validator, max_integer_field_validator])
 
     class Meta:
         model = Recipes
@@ -85,14 +90,17 @@ class RecipeUpdateSerializer(serializers.ModelSerializer):
         ingredients_data = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         recipe = Recipes.objects.create(**validated_data)
-
+        ingredient_per_recipe_list = []
         for ingredient_data in ingredients_data:
 
             ingredient = ingredient_data.get('id')
             amount = ingredient_data.get('amount')
             ingredient_id = Ingredients.objects.get(id=ingredient)
-            IngredientPerRecipe.objects.create(
+            ingredient_per_recipe = IngredientPerRecipe(
                 recipe=recipe, ingredient=ingredient_id, amount=amount)
+            ingredient_per_recipe_list.append(ingredient_per_recipe)
+        IngredientPerRecipe.objects.bulk_create(ingredient_per_recipe_list)
+
         recipe.tags.set(tags)
         recipe.save()
         return recipe
@@ -109,19 +117,25 @@ class RecipeUpdateSerializer(serializers.ModelSerializer):
         ingredients_data = validated_data.pop('ingredients')
         instance.tags.clear()
         instance.ingredients.clear()
+
+        tags_list = []
+
         for tag in tags_data:
-            tag_id = tag.id
-            tag_object = get_object_or_404(Tag, id=tag_id)
-            instance.tags.add(tag_object)
+            tags_list.append(tag)
+        instance.tags.set(tags_list)
+
+        ingredients_list = []
+
         for ingredient in ingredients_data:
             ingredient_id = ingredient.get('id')
             amount = ingredient.get('amount')
             ingredient_object = get_object_or_404(
                 Ingredients, id=ingredient_id)
-            instance.ingredients.add(
-                ingredient_object,
-                through_defaults={'amount': amount}
-            )
+            ingredient_instance = IngredientPerRecipe(
+                recipe=instance, ingredient=ingredient_object, amount=amount)
+            ingredients_list.append(ingredient_instance)
+        IngredientPerRecipe.objects.bulk_create(ingredients_list)
+
         instance.save()
         return instance
 
@@ -147,14 +161,14 @@ class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
 
     def get_is_favorited(self, obj):
-        """Handle adding recipes to favorites."""
+        """Handle showing if recipe is in favorites."""
         user = self.context['request'].user
         if isinstance(obj, Recipes):
             return obj.is_favorited.filter(id=user.id).exists()
         return False
 
     def get_is_in_shopping_cart(self, obj):
-        """Handle adding recipes to the shopping cart."""
+        """Handle showing if the recipe is in the shopping cart."""
         user = self.context['request'].user
         if isinstance(obj, Recipes):
             return obj.is_in_shopping_cart.filter(id=user.id).exists()
@@ -165,6 +179,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         if obj.image:
             return self.context['request'].build_absolute_uri(obj.image.url)
         return None
+
+
 
     class Meta:
         model = Recipes

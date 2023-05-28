@@ -24,10 +24,14 @@ class IngredientsAdmin(admin.ModelAdmin):
     list_filter = ['name']
     list_display = ['name', 'measurement_unit']
 
+class RecipesIngredientInline(admin.TabularInline):
+    model = IngredientPerRecipe
+    min_num = 1
 
 class RecipesAdmin(admin.ModelAdmin):
     list_display = ['name', 'author', 'get_favorited_number']
     list_filter = ['author', 'name', 'tags']
+    inlines = [RecipesIngredientInline]
 
     def get_favorited_number(self, obj):
         return obj.is_favorited.count()
