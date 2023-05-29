@@ -76,14 +76,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = self.get_object()
         user = request.user
         if request.method == 'POST':
-            """Валидировать SerializerMethodField на уровне
-            поля сериализатора нельзя, поскольку он read_only и
-            генерируется под каждый запрос.
-            https://www.django-rest-framework.org/api-guide/fields/#serializermethodfield
-            Мне кажется, чтобы перенести валидацию в сериализатор,
-            придется переписать логику. Можно ли оставить валидацию во вьюсете,
-            поскольку мы здесь вносим изменения в модель Recipes?
-            """
+
             if user in recipe.is_favorited.all():
                 return Response(
                     {'errors': 'The recipe is already in favorites'},
