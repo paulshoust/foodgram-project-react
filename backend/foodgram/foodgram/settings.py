@@ -74,6 +74,9 @@ TEMPLATES = [
     },
 ]
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 
