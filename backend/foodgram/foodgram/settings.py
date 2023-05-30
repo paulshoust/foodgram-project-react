@@ -80,8 +80,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 
-Database
-https://docs.djangoproject.com/en/2.2/ref/settings/databases
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/databases
 
 DATABASES = {
     'default': {
