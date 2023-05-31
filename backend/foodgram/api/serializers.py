@@ -1,12 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
-
 from recipe.models import IngredientPerRecipe, Ingredients, Recipes, Tag
+from rest_framework import serializers
 from users.serializers import UserSerializer
 
-from .validators import positive_value_validator, max_integer_field_validator
+from .validators import max_integer_field_validator, positive_value_validator
 
 User = get_user_model()
 
@@ -179,8 +178,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         if obj.image:
             return self.context['request'].build_absolute_uri(obj.image.url)
         return None
-
-
 
     class Meta:
         model = Recipes

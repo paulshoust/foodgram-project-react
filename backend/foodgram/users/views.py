@@ -1,4 +1,6 @@
+from api.serializers import RecipeSerializer, UserSerializer
 from django.contrib.auth import authenticate, get_user_model
+from recipe.models import Recipes
 from rest_framework import generics, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -6,9 +8,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from api.serializers import RecipeSerializer, UserSerializer
-from recipe.models import Recipes
 
 from .models import Subscription
 from .serializers import ChangePasswordSerializer, CurrentUserSerializer
