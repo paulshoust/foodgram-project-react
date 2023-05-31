@@ -9,7 +9,8 @@ User = get_user_model()
 
 class Tag(models.Model):
     name = models.CharField(max_length=20, verbose_name='Тэг')
-    color = models.CharField(max_length=7, validators=[color_validator], verbose_name='Цвет')
+    color = models.CharField(max_length=7, validators=[color_validator],
+                             verbose_name='Цвет')
     slug = models.SlugField()
 
     class Meta:
@@ -53,15 +54,20 @@ class Recipes(models.Model):
         related_name='recipes',
     )
     is_favorited = models.ManyToManyField(
-        User, related_name='favorite', blank=True, default=False, verbose_name='Избранное')
+        User, related_name='favorite', blank=True, default=False,
+        verbose_name='Избранное')
     is_in_shopping_cart = models.ManyToManyField(
-        User, related_name='shopping_cart', blank=True, default=False, verbose_name='Корзина')
+        User, related_name='shopping_cart', blank=True, default=False,
+        verbose_name='Корзина')
     name = models.CharField(max_length=200,
                             verbose_name='Рецепт')
-    image = models.ImageField(upload_to='recipe/images/', null=True, blank=True, verbose_name='Фото')
-    text = models.TextField(blank=False, default='default text', verbose_name='Инструкции')
+    image = models.ImageField(upload_to='recipe/images/', null=True,
+                              blank=True, verbose_name='Фото')
+    text = models.TextField(blank=False, default='default text',
+                            verbose_name='Инструкции')
     cooking_time = models.PositiveSmallIntegerField(verbose_name='Время')
-    pub_date = models.DateTimeField(default=timezone.now, verbose_name='Дата создания')
+    pub_date = models.DateTimeField(default=timezone.now,
+                                    verbose_name='Дата создания')
 
     class Meta:
         ordering = ['-id']
