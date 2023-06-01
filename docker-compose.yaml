@@ -19,13 +19,13 @@ services:
     env_file:
       - ./.env
 
-  # frontend:
-  #   image: paulsh1988/foodgram_frontend:latest
-  #   volumes:
-  #     - ./frontend/:/app/result_build/
-  #   depends_on:
-  #     - db
-  #   container_name: foodgram_frontend
+  frontend:
+    image: paulsh1988/foodgram_frontend:latest
+    volumes:
+      - ./frontend/:/app/result_build/
+    depends_on:
+      - db
+    container_name: foodgram_frontend
 
   nginx:
     image: nginx:1.21.3-alpine
