@@ -39,7 +39,7 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - web
-      - frontend
+      - foodgram_frontend
 
 volumes:
   static_value:
