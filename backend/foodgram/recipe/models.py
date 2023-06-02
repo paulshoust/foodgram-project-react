@@ -54,10 +54,10 @@ class Recipes(models.Model):
         related_name='recipes',
     )
     is_favorited = models.ManyToManyField(
-        User, related_name='favorite', blank=True, default=False,
+        User, related_name='favorite', blank=True,
         verbose_name='Избранное')
     is_in_shopping_cart = models.ManyToManyField(
-        User, related_name='shopping_cart', blank=True, default=False,
+        User, related_name='shopping_cart', blank=True,
         verbose_name='Корзина')
     name = models.CharField(max_length=200,
                             verbose_name='Рецепт')
