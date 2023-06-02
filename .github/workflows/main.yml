@@ -92,11 +92,12 @@ jobs:
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           sudo docker-compose stop
-          sudo docker-compose rm paulsho-web-1
-          sudo docker-compose pull paulsh1988/foodgram:latest
-          sudo docker-compose rm paulsho-frontend-1
-          sudo docker-compose pull paulsh1988/foodgram_frontend:latest
+          sudo docker-compose rm web
+          sudo docker pull paulsh1988/foodgram:latest
+          sudo docker-compose rm frontend
+          sudo docker pull paulsh1988/foodgram_frontend:latest
           sudo docker-compose up -d --build
-          # echo "yes" | sudo docker-compose exec -T paulsho-web-1 python manage.py collectstatic --no-input
-          # echo "yes" | sudo docker-compose exec -T paulsho-web-1 python manage.py migrate --no-input
+          # echo "yes" | sudo docker-compose exec -T web python manage.py collectstatic --no-input
+          # echo "yes" | sudo docker-compose exec -T web python manage.py makemigrations --no-input
+          # echo "yes" | sudo docker-compose exec -T web python manage.py migrate --no-input
 
