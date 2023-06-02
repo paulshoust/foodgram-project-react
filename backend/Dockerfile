@@ -12,4 +12,4 @@ COPY . .
 
 
 
-CMD ["gunicorn", "foodgram.foodgram.wsgi:application", "--bind", "0:8000"]
+CMD ["gunicorn", "app.foodgram.foodgram.wsgi:application", "--bind", "0:8000"]
