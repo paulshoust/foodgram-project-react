@@ -93,8 +93,8 @@ jobs:
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           sudo docker-compose stop
           sudo docker-compose rm backend
-          sudo docker-compose pull backend
+          sudo docker-compose pull paulsh1988/foodgram:latest
           sudo docker-compose rm frontend
-          sudo docker-compose pull frontend
+          sudo docker-compose pull paulsh1988/foodgram_backend:latest
           sudo docker-compose up -d --build
           # echo "yes" | sudo docker-compose exec -T web python manage.py collectstatic --no-input
