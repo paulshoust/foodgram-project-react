@@ -98,3 +98,5 @@ jobs:
           sudo docker-compose pull paulsh1988/foodgram_frontend:latest
           sudo docker-compose up -d --build
           # echo "yes" | sudo docker-compose exec -T paulsho-web-1 python manage.py collectstatic --no-input
+          # echo "yes" | sudo docker-compose exec -T paulsho-web-1 python manage.py migrate --no-input
+
