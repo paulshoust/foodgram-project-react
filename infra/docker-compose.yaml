@@ -29,7 +29,7 @@ services:
     image: paulsh1988/foodgram_frontend:latest
     container_name: frontend
     volumes:
-      - ../frontend/:/app/result_build/
+      - ../frontend/build/:/app/result_build/
     depends_on:
       - web
 
