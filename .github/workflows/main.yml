@@ -92,9 +92,9 @@ jobs:
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           sudo docker-compose stop
-          sudo docker-compose rm web
+          # echo "yes" | sudo docker-compose rm web --no-input
           sudo docker pull paulsh1988/foodgram:latest
-          sudo docker-compose rm frontend
+          # echo "yes" | sudo docker-compose rm frontend --no-input
           sudo docker pull paulsh1988/foodgram_frontend:latest
           sudo docker-compose up -d --build
           # echo "yes" | sudo docker-compose exec -T web python manage.py collectstatic --no-input
