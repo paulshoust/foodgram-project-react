@@ -1,1 +1,1 @@
-# praktikum_new_diplom
+[![Django-app workflow](https://github.com/paulshoust/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/paulshoust/foodgram-project-react/actions/workflows/main.yml)
