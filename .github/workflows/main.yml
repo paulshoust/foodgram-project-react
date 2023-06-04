@@ -91,6 +91,7 @@ jobs:
           echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
           sudo docker-compose stop
           # echo "yes" | sudo docker-compose rm web --no-input
           sudo docker pull paulsh1988/foodgram:latest
