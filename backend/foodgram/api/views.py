@@ -40,7 +40,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(author=author)
 
         if tags:
-            queryset = queryset.filter(tag__slug=tags)
+            queryset = queryset.filter(tags__slug=tags)
 
         return queryset
 
