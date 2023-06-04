@@ -1,5 +1,5 @@
-from rest_framework.pagination import PageNumberPagination
 from foodgram.settings import RESULTS_PER_PAGE
+from rest_framework.pagination import PageNumberPagination
 
 
 class RecipePagination(PageNumberPagination):
