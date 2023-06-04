@@ -176,7 +176,7 @@ class CustomAuthToken(ObtainAuthToken):
 
             if user is not None:
                 token, created = Token.objects.get_or_create(user=user)
-                return Response({'token': token.key})
+            return Response({'auth_token': token.key}, status=201)
         return Response({'error': 'Invalid name/password'}, status=400)
 
 
