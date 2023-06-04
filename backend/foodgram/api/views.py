@@ -155,7 +155,8 @@ class ShoppingList(APIView):
 
     def get(self, request, *args, **kwargs):
         """Get all relevant recipes and compile a list."""
-        recipes = Recipes.objects.filter(is_in_shopping_cart=True)
+        user = request.user
+        recipes = Recipes.objects.filter(is_in_shopping_cart=user)
         ingredient_list = {}
         recipe_list = []
 
@@ -170,7 +171,7 @@ class ShoppingList(APIView):
                     ingredient_list[ingredient_name] += ingredient_amount
                 else:
                     ingredient_list[ingredient_name] = ingredient_amount
-        final_list = "Shopping list for ' + ',' '.join(recipe_list) + '\n"
+        final_list = 'Shopping list for ' + ',' .join(recipe_list) + '\n'
         for ingredient, amount in ingredient_list.items():
             ingredient_unit = Ingredients.objects.get(
                 name=ingredient).measurement_unit
