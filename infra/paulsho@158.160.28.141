@@ -7,7 +7,8 @@ services:
       - db_foodgram:/var/lib/postgresql/data/
     env_file:
       - ./.env
-
+    networks:
+      - foodgram-network
 
   web:
     image: paulsh1988/foodgram:latest
@@ -21,7 +22,8 @@ services:
       - db
     env_file:
       - ./.env
-  
+    networks:
+      - foodgram-network
 
   frontend:
     image: paulsh1988/foodgram_frontend:latest
@@ -30,7 +32,8 @@ services:
       - ../frontend/build/:/app/result_build/
     depends_on:
       - web
-
+    networks:
+      - foodgram-network
 
   nginx:
     image: nginx:1.19.3
@@ -45,7 +48,8 @@ services:
     depends_on:
     - web
     - frontend
-
+    networks:
+      - foodgram-network
 
 
 volumes:
