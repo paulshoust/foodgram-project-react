@@ -2,10 +2,10 @@ from django.http import HttpResponse
 from recipe.models import IngredientPerRecipe, Ingredients, Recipes, Tag
 from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .pagination import RecipePagination
 from .permissions import IsAuthorOrAdmin
 from .serializers import (IngredientPerRecipeSerializer, IngredientSerializer,
                           RecipeSerializer, RecipeUpdateSerializer,
@@ -17,7 +17,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipes.objects.all()
     serializer_class = RecipeSerializer
-    pagination_class = LimitOffsetPagination
+    pagination_class = RecipePagination
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     ingredient = IngredientPerRecipeSerializer
 
@@ -31,10 +31,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         tags = self.request.query_params.get('tags')
 
         if is_favorited == '1':
-            queryset = queryset.filter(is_favorited=True)
+            user = self.request.user
+            queryset = queryset.filter(is_favorited=user)
 
         if is_in_shopping_cart == '1':
-            queryset = queryset.filter(is_in_shopping_cart=True)
+            user = self.request.user
+            queryset = queryset.filter(is_in_shopping_cart=user)
 
         if author:
             queryset = queryset.filter(author=author)
